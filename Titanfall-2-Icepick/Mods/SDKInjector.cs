@@ -19,7 +19,6 @@ namespace Icepick.Mods
 		};
 
 		private const float InjectionTimeout = 30;
-		private const string OriginProcessName = "Origin";
 		public const string SDKDllName = "TTF2SDK.dll";
 		private const string SDKDataPath = @"data\";
 		private const string InitializeFunction = "InitialiseSDK";
@@ -54,19 +53,15 @@ namespace Icepick.Mods
 					Process ttfProcess = ttfProcesses[ 0 ];
 					try
 					{
-						Process potentialOriginProcess = ttfProcess.GetParentProcess();
-						if( potentialOriginProcess != null && potentialOriginProcess.ProcessName == OriginProcessName )
-						{
-							foreach ( ProcessModule module in ttfProcess.Modules )
-							{
-								if ( module.ModuleName == "tier0.dll" )
-								{
-									InjectSDK(ttfProcess);
-									return;
-								}
-							}
-						}
-					}
+                        foreach (ProcessModule module in ttfProcess.Modules)
+                        {
+                            if (module.ModuleName == "tier0.dll")
+                            {
+                                InjectSDK(ttfProcess);
+                                return;
+                            }
+                        }
+                    }
 					catch ( Win32Exception e )
 					{
 						if ( OnInjectionException != null )
@@ -116,6 +111,5 @@ namespace Icepick.Mods
 				OnInjectionComplete();
 			}
 		}
-
 	}
 }
